@@ -113,7 +113,7 @@ export default function Panel() {
           }}
         />
 
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1vh' }}>
           {'Data Source'}
           <a
             href='https://developers.google.com/earth-engine/datasets/catalog/UMD_hansen_global_forest_change_2023_v1_11'
@@ -121,6 +121,30 @@ export default function Panel() {
             target='_blank'
           >
             Hansen Forest Cover
+          </a>
+
+          <a
+            href='https://gee-community-catalog.org/projects/cci_agb/?h=esa+cc'
+            style={{ color: 'lightskyblue', fontWeight: 'bold' }}
+            target='_blank'
+          >
+            awesome-gee-community-catalog ESA CCI Global Forest Above Ground Biomass
+          </a>
+
+          <a
+            href='https://developers.google.com/earth-engine/datasets/catalog/NASA_HLS_HLSL30_v002'
+            style={{ color: 'lightskyblue', fontWeight: 'bold' }}
+            target='_blank'
+          >
+            Harmonized Landsat
+          </a>
+
+          <a
+            href='https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED'
+            style={{ color: 'lightskyblue', fontWeight: 'bold' }}
+            target='_blank'
+          >
+            Harmonized Sentinel-2
           </a>
         </div>
       </div>
