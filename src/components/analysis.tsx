@@ -49,6 +49,7 @@ export default function Analysis() {
     setStatus,
     rasterId,
     status,
+    borderId,
   } = useContext(Context);
 
   // Make options for forest loss
@@ -211,6 +212,7 @@ export default function Analysis() {
 
             let url: string;
             let info: string;
+            let urlBorder: string;
 
             const geojsonData = dissolve(flatten(geojson as FeatureCollection));
 
@@ -225,6 +227,7 @@ export default function Analysis() {
                 );
                 url = result.url;
                 info = result.info;
+                urlBorder = result.borderUrl;
                 break;
               }
               case 'forest_loss': {
@@ -238,12 +241,14 @@ export default function Analysis() {
                 );
                 url = result.url;
                 info = result.info;
+                urlBorder = result.borderUrl;
                 break;
               }
               case 'agb': {
                 const result = await getAgbLayer(year.value, geojsonData, buffer, onlyBuffer);
                 url = result.url;
                 info = result.info;
+                urlBorder = result.borderUrl;
                 break;
               }
               case 'indices': {
@@ -257,11 +262,15 @@ export default function Analysis() {
                 );
                 url = result.url;
                 info = result.info;
+                urlBorder = result.borderUrl;
               }
             }
 
             const source = map.getSource(rasterId) as RasterTileSource;
             source.setTiles([url]);
+
+            const sourceBorder = map.getSource(borderId) as RasterTileSource;
+            sourceBorder.setTiles([urlBorder]);
 
             setStatus({ type: 'success', message: info });
           } catch ({ message }) {
