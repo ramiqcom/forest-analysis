@@ -26,6 +26,8 @@ function geometryData(
 
   if (onlyBuffer) {
     roi = bufferRoi.difference(roi);
+  } else {
+    roi = bufferRoi;
   }
 
   const border = ee.Image().paint(roi, 0, 2).visualize({ palette: 'red ' });
@@ -231,7 +233,7 @@ export async function generateIndicesLayer(
 ) {
   await authenticate();
   const { roi, border } = geometryData(features, buffer, onlyBuffer);
-  const { min, max, palette } = layers.filter((x) => x.value == 'indices')[0];
+  const { palette } = layers.filter((x) => x.value == 'indices')[0];
   const indexImage = indicesData(year, roi, satellite, indice);
 
   const reduce = ee
@@ -248,14 +250,24 @@ export async function generateIndicesLayer(
     )
     .toInt();
 
+  const indexPercentile = indexImage.reduceRegion({
+    geometry: roi,
+    scale: 300,
+    maxPixels: 1e13,
+    reducer: ee.Reducer.percentile([0.1, 99.9]),
+  });
+
+  const maxPercentile = indexPercentile.get(`${indice.toUpperCase()}_p100`);
+  const minPercentile = indexPercentile.get(`${indice.toUpperCase()}_p0`);
+
   const [area, mapid] = await Promise.all([
     evaluate(reduce),
     getMapId(
       indexImage
         .visualize({
           palette: palette,
-          min: min,
-          max: max,
+          min: minPercentile,
+          max: maxPercentile,
         })
         .blend(border),
       {},

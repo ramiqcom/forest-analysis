@@ -28,8 +28,8 @@ export type Option = {
   years1?: number[];
   years2?: number[];
   palette?: string[] | string;
-  min?: number[] | number;
-  max?: number[] | number;
+  min?: number[] | number | string[] | string;
+  max?: number[] | number | string[] | string;
 };
 
 export type Options = Array<Option>;
