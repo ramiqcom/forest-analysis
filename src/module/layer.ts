@@ -22,11 +22,15 @@ function geometryData(
   onlyBuffer: boolean = false,
 ) {
   let roi = ee.FeatureCollection(features).geometry();
-  const bufferRoi = roi.buffer(buffer);
+  let bufferRoi: ee.Image;
+
+  if (buffer) {
+    bufferRoi = roi.buffer(buffer);
+  }
 
   if (onlyBuffer) {
     roi = bufferRoi.difference(roi);
-  } else {
+  } else if (buffer > 0) {
     roi = bufferRoi;
   }
 
