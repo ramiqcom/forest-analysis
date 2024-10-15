@@ -1,0 +1,18 @@
+[
+  {
+    "value": "landsat",
+    "label": "Landsat",
+    "years": [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024],
+    "collections": "NASA/HLS/HLSL30/v002",
+    "bands_source": ["B1", "B2", "B3", "B4", "B5", "B6", "B7"],
+    "bands_label": ["COASTAL", "BLUE", "GREEN", "RED", "NIR", "SWIR1", "SWIR2"]
+  },
+  {
+    "value": "s2",
+    "label": "Sentinel-2",
+    "years": [2019, 2020, 2021, 2022, 2023, 2024],
+    "collections": "COPERNICUS/S2_HARMONIZED",
+    "bands_source": ["B1", "B2", "B3", "B4", "B8", "B11", "B12"],
+    "bands_label": ["COASTAL", "BLUE", "GREEN", "RED", "NIR", "SWIR1", "SWIR2"]
+  }
+]

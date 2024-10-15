@@ -1,0 +1,38 @@
+[
+  {
+    "value": "ndvi",
+    "label": "NDVI",
+    "formula": "NDVI = (NIR - RED) / (NIR + RED)",
+    "bands": ["NIR", "RED"]
+  },
+  {
+    "value": "ndmi",
+    "label": "NDMI",
+    "formula": "NDMI = (NIR - SWIR1) / (NIR + SWIR1)",
+    "bands": ["NIR", "SWIR1"]
+  },
+  {
+    "value": "nbr",
+    "label": "NBR",
+    "formula": "NBR = (NIR - SWIR2) / (NIR + SWIR2)",
+    "bands": ["NIR", "SWIR2"]
+  },
+  {
+    "value": "nbr2",
+    "label": "NBR2",
+    "formula": "NBR2 = (SWIR1 - SWIR2) / (SWIR1 + SWIR2)",
+    "bands": ["SWIR1", "SWIR2"]
+  },
+  {
+    "value": "evi",
+    "label": "EVI",
+    "formula": "EVI = 2.5 * (NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1)",
+    "bands": ["NIR", "RED", "BLUE"]
+  },
+  {
+    "value": "savi",
+    "label": "SAVI",
+    "formula": "SAVI = (NIR - RED) * 1.5  / (NIR + RED + 0.5)",
+    "bands": ["NIR", "RED"]
+  }
+]
