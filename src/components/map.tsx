@@ -1,6 +1,7 @@
 import { getDataValue } from '@/module/layer';
 import { Context } from '@/module/store';
-import { bbox, buffer as bufferData } from '@turf/turf';
+import { bbox, buffer as bufferData, dissolve, flatten } from '@turf/turf';
+import { FeatureCollection } from 'geojson';
 import { LngLatBoundsLike, Map, MapMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useContext, useEffect, useState } from 'react';
@@ -37,9 +38,10 @@ export default function MapCanvas() {
     try {
       setStatus({ type: 'process', message: 'Identify...' });
       const coords = e.lngLat.toArray();
+      const geojsonData = dissolve(flatten(geojson as FeatureCollection));
       const info = await getDataValue(analysis.value, coords, {
         threshold,
-        geojson,
+        geojson: geojsonData,
         year: year.value,
         buffer,
         onlyBuffer,
@@ -72,7 +74,7 @@ export default function MapCanvas() {
           sources: {
             basemap: {
               type: 'raster',
-              tiles: ['https://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'],
+              tiles: ['https://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}'],
               tileSize: 256,
             },
             [rasterId]: {

@@ -9,7 +9,7 @@ import getAgbLayer, {
 } from '@/module/layer';
 import { Context } from '@/module/store';
 import { Option } from '@/module/type';
-import { bbox } from '@turf/turf';
+import { bbox, dissolve, flatten } from '@turf/turf';
 import { FeatureCollection } from 'geojson';
 import { GeoJSONSource, LngLatBoundsLike, RasterTileSource } from 'maplibre-gl';
 import { useContext, useState } from 'react';
@@ -212,11 +212,13 @@ export default function Analysis() {
             let url: string;
             let info: string;
 
+            const geojsonData = dissolve(flatten(geojson as FeatureCollection));
+
             switch (idLayer) {
               case 'forest': {
                 const result = await getForestLayer(
                   year.value,
-                  geojson,
+                  geojsonData,
                   threshold,
                   buffer,
                   onlyBuffer,
@@ -229,7 +231,7 @@ export default function Analysis() {
                 const result = await getForestLossLayer(
                   defYearStart.value,
                   defYearEnd.value,
-                  geojson,
+                  geojsonData,
                   threshold,
                   buffer,
                   onlyBuffer,
@@ -239,7 +241,7 @@ export default function Analysis() {
                 break;
               }
               case 'agb': {
-                const result = await getAgbLayer(year.value, geojson, buffer, onlyBuffer);
+                const result = await getAgbLayer(year.value, geojsonData, buffer, onlyBuffer);
                 url = result.url;
                 info = result.info;
                 break;
@@ -247,7 +249,7 @@ export default function Analysis() {
               case 'indices': {
                 const result = await generateIndicesLayer(
                   year.value,
-                  geojson,
+                  geojsonData,
                   satellite.value,
                   indice.value,
                   buffer,
