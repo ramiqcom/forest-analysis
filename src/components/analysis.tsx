@@ -9,7 +9,7 @@ import getAgbLayer, {
 } from '@/module/layer';
 import { Context } from '@/module/store';
 import { Option } from '@/module/type';
-import { bbox, dissolve, flatten } from '@turf/turf';
+import { area, bbox, dissolve, flatten } from '@turf/turf';
 import { FeatureCollection } from 'geojson';
 import { GeoJSONSource, LngLatBoundsLike, RasterTileSource } from 'maplibre-gl';
 import { useContext, useState } from 'react';
@@ -286,7 +286,8 @@ export default function Analysis() {
 
 // Component to load geojson
 function Upload() {
-  const { setStatus, setGeojson, map, roiId, defaultVectorUrl, status } = useContext(Context);
+  const { setStatus, setGeojson, map, roiId, defaultVectorUrl, status, geojson } =
+    useContext(Context);
 
   // Name of the choice to load geojson
   const [fileChoice, setFileChoice] = useState('gee');
@@ -384,10 +385,9 @@ function Upload() {
       >
         Upload shapefile (zip), geojson, or kml or GEE asset id
       </div>
-
       <div style={{ display: 'flex', alignContent: 'space-between' }}>{fileUploadChoice}</div>
-
       {fileChoice == 'upload' ? uploadFile : assetIdUpload}
+      ROI area: {Math.round(area(geojson) / 1e4)} Ha
     </div>
   );
 }
