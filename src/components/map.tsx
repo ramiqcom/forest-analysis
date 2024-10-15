@@ -26,6 +26,10 @@ export default function MapCanvas() {
     defYearStart,
     defYearEnd,
     analysis,
+    borderId,
+    defaultBorderUrl,
+    showRoi,
+    showBorder,
   } = useContext(Context);
 
   const divId = 'map';
@@ -82,6 +86,11 @@ export default function MapCanvas() {
               tiles: [defaultLayer],
               tileSize: 256,
             },
+            [borderId]: {
+              type: 'raster',
+              tiles: [defaultBorderUrl],
+              tileSize: 256,
+            },
             [roiId]: {
               type: 'geojson',
               data: geojson,
@@ -100,11 +109,18 @@ export default function MapCanvas() {
               type: 'raster',
             },
             {
+              id: borderId,
+              layout: { visibility: showBorder ? 'visible' : 'none' },
+              source: borderId,
+              type: 'raster',
+            },
+            {
               id: roiId,
               source: roiId,
+              layout: { visibility: showRoi ? 'visible' : 'none' },
               type: 'line',
               paint: {
-                'line-color': 'orange',
+                'line-color': 'white',
                 'line-width': 2,
               },
             },

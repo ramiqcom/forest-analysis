@@ -22,6 +22,7 @@ export default async function Home() {
         defaultStates={{
           defaultLayer: firstLayer.url,
           defaultInfo: firstLayer.info,
+          defaultBorderUrl: firstLayer.borderUrl,
           defaultVectorUrl: firstUrl,
           defaultGeojson: geeVector,
           defaultAnalysis,

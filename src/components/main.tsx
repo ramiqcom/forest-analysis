@@ -23,11 +23,13 @@ export default function Main({
     defaultThreshold,
     defaultBuffer,
     defaultOnlyBuffer,
+    defaultBorderUrl,
   },
 }: {
   defaultStates: {
     defaultLayer: string;
     defaultInfo: string;
+    defaultBorderUrl: string;
     defaultGeojson: FeatureCollection<any>;
     defaultVectorUrl: string;
     defaultAnalysis: string;
@@ -68,15 +70,24 @@ export default function Main({
   const [onlyBuffer, setOnlyBuffer] = useState(defaultOnlyBuffer);
 
   const [showLayer, setShowLayer] = useState(true);
+  const [showRoi, setShowRoi] = useState(true);
+  const [showBorder, setShowBorder] = useState(true);
 
   const roiId = 'roi';
+  const borderId = 'border';
   const rasterId = 'raster';
 
   // Convert to object as context
   const states = {
     roiId,
     rasterId,
+    borderId,
+    showRoi,
+    setShowRoi,
+    showBorder,
+    setShowBorder,
     defaultVectorUrl,
+    defaultBorderUrl,
     defaultLayer,
     years,
     setYears,

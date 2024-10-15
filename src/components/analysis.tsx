@@ -179,7 +179,7 @@ export default function Analysis() {
         }}
       />
       {yearsDiv}
-      {analysis.value == 'forest' ? thresholdLevel : null}
+      {analysis.value == 'forest' || analysis.value == 'forest_loss' ? thresholdLevel : null}
       {analysis.value == 'indices' ? IndicesSelect : null}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1vh' }}>
         <div style={{ width: '20%', textAlign: 'left' }}>Buffer</div>

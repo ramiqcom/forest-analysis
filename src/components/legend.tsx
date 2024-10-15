@@ -12,7 +12,13 @@ export default function Legend() {
     map,
     rasterId,
     status,
-    indice
+    indice,
+    showRoi,
+    setShowRoi,
+    showBorder,
+    roiId,
+    borderId,
+    setShowBorder,
   } = useContext(Context);
 
   const forestLegend = (
@@ -87,17 +93,37 @@ export default function Legend() {
           padding: '1vh',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
           gap: '1vh',
         }}
       >
-        <div style={{ fontSize: 'medium' }}>Legend</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1vh', width: '15vh' }}>
-          <div style={{ height: '0.5px', width: '20%', backgroundColor: 'orange' }} />
+        <div style={{ fontSize: 'medium', textAlign: 'center' }}>Legend</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1vh' }}>
+          <input
+            type='checkbox'
+            checked={showRoi}
+            disabled={status.type == 'process'}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              setShowRoi(checked);
+              map.setLayoutProperty(roiId, 'visibility', checked ? 'visible' : 'none');
+            }}
+          />
+          <div style={{ height: '2px', width: '20%', backgroundColor: 'white' }} />
           Uploaded ROI
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1vh', width: '15vh' }}>
-          <div style={{ height: '0.5px', width: '20%', backgroundColor: 'red' }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1vh' }}>
+          <input
+            type='checkbox'
+            checked={showBorder}
+            disabled={status.type == 'process'}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              setShowBorder(checked);
+              map.setLayoutProperty(borderId, 'visibility', checked ? 'visible' : 'none');
+            }}
+          />
+          <div style={{ height: '2px', width: '20%', backgroundColor: 'cyan' }} />
           Analysis ROI
         </div>
 

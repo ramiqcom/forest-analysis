@@ -76,6 +76,12 @@ export type GlobalContext = {
   defaultInfo: string;
   showLayer: boolean;
   setShowLayer: SetState<boolean>;
+  defaultBorderUrl: string;
+  borderId: string;
+  showRoi: boolean;
+  setShowRoi: SetState<boolean>;
+  showBorder: boolean;
+  setShowBorder: SetState<boolean>;
 };
 
 export type Urls = {

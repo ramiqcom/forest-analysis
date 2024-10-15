@@ -30,7 +30,7 @@ function geometryData(
     roi = bufferRoi;
   }
 
-  const border = ee.Image().paint(roi, 0, 2).visualize({ palette: 'red ' });
+  const border = ee.Image().paint(roi, 0, 2);
 
   return { roi, border };
 }
@@ -66,19 +66,16 @@ export async function getForestLayer(
       reducer: ee.Reducer.sum(),
     });
 
-  const [area, mapid] = await Promise.all([
+  const [area, mapid, borderUrl] = await Promise.all([
     evaluate(forestReduce),
-    getMapId(
-      image
-        .visualize({ palette: layers.filter((x) => x.value == 'forest')[0].palette })
-        .blend(border),
-      {},
-    ),
+    getMapId(image, { palette: layers.filter((x) => x.value == 'forest')[0].palette }),
+    getMapId(border, { palette: 'cyan' }),
   ]);
 
   return {
     info: `Forest area: ${Math.round(area.forest_area)} Ha; Analysis area: ${Math.round(area.area)} Ha`,
     url: mapid.urlFormat,
+    borderUrl: borderUrl.urlFormat,
   };
 }
 
@@ -122,23 +119,20 @@ export async function getForestLossLayer(
       reducer: ee.Reducer.sum(),
     });
 
-  const [area, mapid] = await Promise.all([
+  const [area, mapid, borderUrl] = await Promise.all([
     evaluate(forestReduce),
-    getMapId(
-      forestLoss
-        .visualize({
-          palette: layers.filter((x) => x.value == 'forest_loss')[0].palette,
-          min: yearStart - 2000,
-          max: yearEnd - 2000,
-        })
-        .blend(border),
-      {},
-    ),
+    getMapId(forestLoss, {
+      palette: layers.filter((x) => x.value == 'forest_loss')[0].palette,
+      min: yearStart - 2000,
+      max: yearEnd - 2000,
+    }),
+    getMapId(border, { palette: 'cyan' }),
   ]);
 
   return {
     info: `Forest loss ${yearStart} - ${yearEnd}: ${Math.round(area.forest_loss)} Ha; Analysis area: ${Math.round(area.area)} Ha`,
     url: mapid.urlFormat,
+    borderUrl: borderUrl.urlFormat,
   };
 }
 
@@ -177,23 +171,20 @@ export default async function getAgbLayer(
   );
 
   const agbParam = layers.filter((x) => x.value == 'agb')[0];
-  const [agbData, mapid] = await Promise.all([
+  const [agbData, mapid, borderUrl] = await Promise.all([
     evaluate(agbValue),
-    getMapId(
-      agb
-        .visualize({
-          palette: agbParam.palette,
-          min: agbParam.min,
-          max: agbParam.max,
-        })
-        .blend(border),
-      {},
-    ),
+    getMapId(agb, {
+      palette: agbParam.palette,
+      min: agbParam.min as number,
+      max: agbParam.max as number,
+    }),
+    getMapId(border, { palette: 'cyan' }),
   ]);
 
   return {
     info: `AGB: ${Math.round(agbData.AGB)} Ton; Analysis area: ${Math.round(agbData.area)} Ha`,
     url: mapid.urlFormat,
+    borderUrl: borderUrl.urlFormat,
   };
 }
 
@@ -260,21 +251,21 @@ export async function generateIndicesLayer(
   const maxPercentile = indexPercentile.get(`${indice.toUpperCase()}_p100`);
   const minPercentile = indexPercentile.get(`${indice.toUpperCase()}_p0`);
 
-  const [area, mapid] = await Promise.all([
+  const [area, mapid, borderUrl] = await Promise.all([
     evaluate(reduce),
-    getMapId(
-      indexImage
-        .visualize({
-          palette: palette,
-          min: minPercentile,
-          max: maxPercentile,
-        })
-        .blend(border),
-      {},
-    ),
+    getMapId(indexImage, {
+      palette: palette,
+      min: minPercentile,
+      max: maxPercentile,
+    }),
+    getMapId(border, { palette: 'cyan' }),
   ]);
 
-  return { info: `Analysis area: ${area} Ha`, url: mapid.urlFormat };
+  return {
+    info: `Analysis area: ${area} Ha`,
+    url: mapid.urlFormat,
+    borderUrl: borderUrl.urlFormat,
+  };
 }
 
 // Cloud masking function landsat
