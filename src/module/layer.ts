@@ -285,15 +285,15 @@ export async function getDataValue(
   id: string,
   coords: number[],
   parameter: {
-    threshold: number;
-    geojson: FeatureCollection<any>;
-    year: number;
-    buffer: number;
-    onlyBuffer: boolean;
-    yearStart: number;
-    yearEnd: number;
-    satellite: string;
-    indice: string;
+    threshold?: number;
+    geojson?: FeatureCollection<any>;
+    year?: number;
+    buffer?: number;
+    onlyBuffer?: boolean;
+    yearStart?: number;
+    yearEnd?: number;
+    satellite?: string;
+    indice?: string;
   },
 ) {
   const { threshold, geojson, year, buffer, onlyBuffer, yearStart, yearEnd, satellite, indice } =
@@ -304,30 +304,44 @@ export async function getDataValue(
   const { roi } = geometryData(geojson, buffer, onlyBuffer);
 
   let image: ee.Image;
+  let template;
 
   switch (id) {
     case 'forest': {
       image = getForestCover(year, roi, threshold);
+      template = (value: number) => `This is ${value ? 'Forest' : 'not forest'}`;
       break;
     }
     case 'forest_loss': {
       image = forestLossData(yearStart, yearEnd, roi, threshold);
+      template = (value: number) => `Forest loss in ${2000 + value}`;
       break;
     }
     case 'agb': {
       image = getAgbData(year, roi);
+      template = (value: number) => `AGB: ${value} C Ton/Ha`;
       break;
     }
     case 'indices': {
       image = indicesData(year, roi, satellite, indice);
+      template = (value: number) => `${indice.toUpperCase()}: ${value}`;
       break;
     }
   }
 
-  const result = image.rename('result').reduceRegion({
-    scale: 100,
-    maxPixels: 1e13,
-    reducer: ee.Reducer.first(),
-    geometry: ee.Geometry.Point(coords),
-  });
+  const result = ee.Number(
+    image
+      .rename('result')
+      .reduceRegion({
+        scale: 100,
+        maxPixels: 1e13,
+        reducer: ee.Reducer.first(),
+        geometry: ee.Geometry.Point(coords),
+      })
+      .get('result'),
+  );
+
+  const evaluated = await evaluate(result);
+
+  return template(evaluated) as string;
 }
